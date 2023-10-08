@@ -64,6 +64,7 @@ class Account {
   }
 
   static async findByFederated(provider, claims) {
+    console.log(`find account provider=${provider}, claims=${claims}`);
     const id = `${provider}.${claims.sub}`;
     if (!logins.get(id)) {
       logins.set(id, new Account(id, claims));
@@ -72,6 +73,7 @@ class Account {
   }
 
   static async findByLogin(login) {
+    console.log(`find account login=${login}`);
     if (!logins.get(login)) {
       logins.set(login, new Account(login));
     }
@@ -80,6 +82,7 @@ class Account {
   }
 
   static async findAccount(ctx, id, token) { // eslint-disable-line no-unused-vars
+    console.log(`find account id=${id}, token=${token}`);
     // token is a reference to the token used for which a given account is being loaded,
     //   it is undefined in scenarios where account claims are returned from authorization endpoint
     // ctx is the koa request context

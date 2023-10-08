@@ -1,11 +1,14 @@
 export default {
+  pkce: {
+    required: (ctx, client) => false,
+  },
   clients: [
-    // {
-    //   client_id: 'oidcCLIENT',
-    //   client_secret: '...',
-    //   grant_types: ['refresh_token', 'authorization_code'],
-    //   redirect_uris: ['http://sso-client.dev/providers/7/open_id', 'http://sso-client.dev/providers/8/open_id'],
-    // }
+    {
+       client_id: '395328',
+       client_secret: 'a00378deddbf1b2d344b91c7abed8c0def825fa233c3f11071fdb7ee',
+       grant_types: ['refresh_token', 'authorization_code', 'implicit', 'urn:ietf:params:oauth:grant-type:device_code'],
+       redirect_uris: ['https://git.hlavacek.win/user/oauth2/localhost/callback'],
+    }
   ],
   interactions: {
     url(ctx, interaction) { // eslint-disable-line no-unused-vars
@@ -23,7 +26,7 @@ export default {
       'nickname', 'picture', 'preferred_username', 'profile', 'updated_at', 'website', 'zoneinfo'],
   },
   features: {
-    devInteractions: { enabled: false }, // defaults to true
+    devInteractions: { enabled: true }, // defaults to true
 
     deviceFlow: { enabled: true }, // defaults to false
     revocation: { enabled: true }, // defaults to false
