@@ -16,18 +16,21 @@ import routes from './routes.js';
 const __dirname = dirname(import.meta.url);
 
 const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
+const ENV_PROD = process.env.NODE_ENV === 'production';
 configuration.findAccount = Account.findAccount;
 
 const app = express();
 
-const directives = helmet.contentSecurityPolicy.getDefaultDirectives();
-delete directives['form-action'];
-app.use(helmet({
-    contentSecurityPolicy: {
-        useDefaults: false,
-        directives,
-    },
-}));
+if (ENV_PROD) {
+    const directives = helmet.contentSecurityPolicy.getDefaultDirectives();
+    delete directives['form-action'];
+    app.use(helmet({
+        contentSecurityPolicy: {
+            useDefaults: false,
+            directives,
+        },
+    }));
+}
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -40,11 +43,9 @@ try {
         await adapter.connect();
     }
 
-    const prod = process.env.NODE_ENV === 'production';
-
     const provider = new Provider(ISSUER, { adapter, ...configuration });
 
-    if (prod) {
+    if (ENV_PROD) {
         app.enable('trust proxy');
         provider.proxy = true;
 
