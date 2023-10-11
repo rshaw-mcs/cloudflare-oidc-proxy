@@ -14,7 +14,7 @@ import Provider from 'oidc-provider';
 import Account from './account.js';
 import configuration from './configuration.js';
 import routes from './routes.js';
-import { verifyToken } from "./verify-jwt.js";
+import { addToken } from "./verify-jwt.js";
 
 const __dirname = dirname(import.meta.url);
 
@@ -71,7 +71,7 @@ try {
         });
     }
 
-    app.use(verifyToken)
+    app.use(addToken)
     routes(app, provider);
     app.use(provider.callback());
 

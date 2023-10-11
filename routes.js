@@ -45,7 +45,7 @@ export default (app, provider) => {
   app.get('/', setNoCache, async (req, res, next) => {
     return res.render('index', {
       title: 'OICD Cloudflare proxy',
-      uid: req.user.email,
+      uid: req?.user?.email,
       client: '',
       session: undefined,
       dbg: {
@@ -70,6 +70,7 @@ export default (app, provider) => {
             details: prompt.details,
             params,
             title: 'Sign-in',
+            user: req?.user?.email,
             session: session ? debug(session) : undefined,
             dbg: {
               params: debug(params),
@@ -84,6 +85,7 @@ export default (app, provider) => {
             details: prompt.details,
             params,
             title: 'Authorize',
+            user: req?.user?.email,
             session: session ? debug(session) : undefined,
             dbg: {
               params: debug(params),

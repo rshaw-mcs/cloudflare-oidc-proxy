@@ -21,12 +21,14 @@ const getKey = (header, callback) => {
 }
 
 // verifyToken is a middleware to verify a CF authorization token
-export const verifyToken = (req, res, next) => {
+export const addToken = (req, res, next) => {
     const token = req.header('Cf-Access-Jwt-Assertion');
 
     // Make sure that the incoming request has our token header
     if (!token) {
-        return res.status(403).send({ status: false, message: 'missing required cf authorization token' });
+        req.user = null;
+        next();
+        return;
     }
 
     jwt.verify(token, getKey, { audience: AUD }, (err, decoded) => {
