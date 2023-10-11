@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import 'dotenv/config';
 import https from 'https';
 import fs from 'fs';
 import * as path from 'node:path';
@@ -13,6 +14,7 @@ import Provider from 'oidc-provider';
 import Account from './account.js';
 import configuration from './configuration.js';
 import routes from './routes.js';
+import { verifyToken } from "./verify-jwt.js";
 
 const __dirname = dirname(import.meta.url);
 
@@ -69,6 +71,7 @@ try {
         });
     }
 
+    app.use(verifyToken)
     routes(app, provider);
     app.use(provider.callback());
 

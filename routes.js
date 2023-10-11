@@ -42,6 +42,18 @@ export default (app, provider) => {
     next();
   }
 
+  app.get('/', setNoCache, async (req, res, next) => {
+    return res.render('index', {
+      title: 'OICD Cloudflare proxy',
+      uid: req.user.email,
+      client: '',
+      session: undefined,
+      dbg: {
+        params: JSON.stringify(req.headers)
+      },
+    });
+  });
+
   app.get('/interaction/:uid', setNoCache, async (req, res, next) => {
     try {
       const {
