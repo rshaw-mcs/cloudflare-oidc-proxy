@@ -72,8 +72,8 @@ class Account {
     return logins.get(id);
   }
 
-  static async findByLogin(login) {
-    console.log(`find account login=${login}`);
+  static async findByLogin(req, login) {
+    console.log(`find account login=${login} ${req.header("Cf-Access-Jwt-Assertion")}`);
     if (!logins.get(login)) {
       logins.set(login, new Account(login));
     }

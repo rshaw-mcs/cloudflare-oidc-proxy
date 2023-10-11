@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-
+import https from 'https';
+import fs from 'fs';
 import * as path from 'node:path';
 import * as url from 'node:url';
 
@@ -17,6 +18,7 @@ const __dirname = dirname(import.meta.url);
 
 const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
 const ENV_PROD = process.env.NODE_ENV === 'production';
+const ENV_SSL = !!process.env.SSL;
 configuration.findAccount = Account.findAccount;
 
 const app = express();
@@ -69,9 +71,19 @@ try {
 
     routes(app, provider);
     app.use(provider.callback());
-    server = app.listen(PORT, () => {
-        console.log(`application is listening on port ${PORT}, check its /.well-known/openid-configuration`);
-    });
+
+    if (ENV_SSL) {
+        server = https.createServer({
+            key: fs.readFileSync('key.pem'),
+            cert: fs.readFileSync('cert.pem')
+        }, app).listen(PORT,  '',() => {
+            console.log(`application is listening on port https://localhost:${PORT}, check its /.well-known/openid-configuration`);
+        });
+    } else {
+        server = app.listen(PORT, () => {
+            console.log(`application is listening on port http://localhost:${PORT}, check its /.well-known/openid-configuration`);
+        });
+    }
 } catch (err) {
     if (server?.listening) server.close();
     console.error(err);
