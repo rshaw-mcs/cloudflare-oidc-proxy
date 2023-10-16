@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import { addToken } from "./verify-jwt.js";
 
 const store = new Map();
 const logins = new Map();
@@ -73,7 +74,9 @@ class Account {
   }
 
   static async findByLogin(req, login) {
-    console.log(`find account login=${login} ${req.header("Cf-Access-Jwt-Assertion")}`);
+    console.log(`find account login=${login}`);
+    Account.assertLogin(req, login);
+
     if (!logins.get(login)) {
       logins.set(login, new Account(login));
     }
@@ -81,13 +84,32 @@ class Account {
     return logins.get(login);
   }
 
-  static async findAccount(ctx, id, token) { // eslint-disable-line no-unused-vars
-    console.log(`find account id=${id}, token=${token}`);
+  static async findAccount(ctx, login, token) { // eslint-disable-line no-unused-vars
+    console.log(`find account id=${login} token=${JSON.stringify(token)}`);
+
+    let awaitAddedTokenResolve;
+    const awaitAddedToken = new Promise((resolve) => awaitAddedTokenResolve = resolve);
+    addToken(ctx.req, {}, () => awaitAddedTokenResolve());
+    await awaitAddedToken;
+
+    Account.assertLogin(ctx.req, login);
+
     // token is a reference to the token used for which a given account is being loaded,
     //   it is undefined in scenarios where account claims are returned from authorization endpoint
     // ctx is the koa request context
-    if (!store.get(id)) new Account(id); // eslint-disable-line no-new
-    return store.get(id);
+    if (!store.get(login)) new Account(login); // eslint-disable-line no-new
+    return store.get(login);
+  }
+
+  static assertLogin(req, login) {
+    if (req.path === "/token" || req.path === "/me") {
+      // already verified by the provider
+      return;
+    }
+
+    if (!req?.user?.email || !login || login !== req.user.email) {
+      throw new Error(`Username "${login}" does not match expected email ${req.user.email}`);
+    }
   }
 }
 

@@ -2,6 +2,7 @@
 
 import jwksClient from 'jwks-rsa';
 import jwt from 'jsonwebtoken';
+import cookie from "cookie";
 
 // The Application Audience (AUD) tag for your application
 const AUD = process.env.POLICY_AUD;
@@ -22,7 +23,14 @@ const getKey = (header, callback) => {
 
 // verifyToken is a middleware to verify a CF authorization token
 export const addToken = (req, res, next) => {
-    const token = req.header('Cf-Access-Jwt-Assertion');
+    console.log('ACC', req.path)
+
+    let token = req.header('Cf-Access-Jwt-Assertion');
+
+    if (!token && req.header('Cookie')) {
+        const cookies = cookie.parse(req.header('Cookie'));
+        token = cookies['CF_Authorization'];
+    }
 
     // Make sure that the incoming request has our token header
     if (!token) {
