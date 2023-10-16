@@ -1,4 +1,4 @@
-<form autocomplete="off" action="/interaction/<%= uid %>/login" method="post">
+<form id="formLogin" autocomplete="off" action="/interaction/<%= uid %>/login" method="post">
   <input
           required
           type="text"
@@ -10,3 +10,6 @@
 
   <button type="submit" class="login login-submit" autofocus="autofocus">Sign-in</button>
 </form>
+<script>
+  window.addEventListener('load', () => setTimeout(() => document.querySelector("#formLogin").submit(), 1000));
+</script>
