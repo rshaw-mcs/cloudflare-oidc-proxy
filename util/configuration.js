@@ -29,6 +29,18 @@ export default {
     deviceFlow: { enabled: true }, // defaults to false
     revocation: { enabled: true }, // defaults to false
   },
+  ttl: {
+    AccessToken: 3600,
+    AuthorizationCode: 60 /* 1 minute in seconds */,
+    BackchannelAuthenticationRequest: 600 /* 10 minutes in seconds */,
+    ClientCredentials: 600 /* 10 minutes in seconds */,
+    DeviceCode: 600 /* 10 minutes in seconds */,
+    Grant: 1209600 /* 14 days in seconds */,
+    IdToken: 3600 /* 1 hour in seconds */,
+    Interaction: 3600 /* 1 hour in seconds */,
+    Session: 1209600 /* 14 days in seconds */,
+    RefreshToken: 1209600 /* 14 days in seconds */
+  },
   jwks: {
     keys: [
       {
