@@ -1,3 +1,5 @@
+// Adapted from https://github.com/panva/node-oidc-provider/blob/main/example/express.js
+
 /* eslint-disable no-console */
 import 'dotenv/config';
 import https from 'https';
@@ -71,6 +73,7 @@ try {
         });
     }
 
+    // noinspection JSCheckFunctionSignatures
     app.use(addUserInfo)
     routes(app, provider);
     app.use(provider.callback());

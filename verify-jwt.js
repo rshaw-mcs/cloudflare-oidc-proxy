@@ -1,4 +1,4 @@
-// https://developers.cloudflare.com/cloudflare-one/identity/authorization-cookie/validating-json/#javascript-example
+// Adapted from https://developers.cloudflare.com/cloudflare-one/identity/authorization-cookie/validating-json/#javascript-example
 
 import jwksClient from 'jwks-rsa';
 import jwt from 'jsonwebtoken';

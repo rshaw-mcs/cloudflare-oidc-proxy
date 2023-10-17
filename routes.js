@@ -1,3 +1,5 @@
+// Adapted from https://github.com/panva/node-oidc-provider/blob/main/example/routes/express.js
+
 /* eslint-disable no-console, camelcase, no-unused-vars */
 import { strict as assert } from 'node:assert';
 import * as querystring from 'node:querystring';

@@ -1,15 +1,13 @@
+// Adapted from https://github.com/panva/node-oidc-provider/blob/main/example/support/configuration.js
+
+import { CLIENTS } from "./config/clients.js";
+
+// noinspection JSUnusedGlobalSymbols, JSUnusedLocalSymbols
 export default {
   pkce: {
     required: (ctx, client) => false,
   },
-  clients: [
-    {
-       client_id: '395328',
-       client_secret: 'a00378deddbf1b2d344b91c7abed8c0def825fa233c3f11071fdb7ee',
-       grant_types: ['refresh_token', 'authorization_code', 'implicit', 'urn:ietf:params:oauth:grant-type:device_code'],
-       redirect_uris: ['https://git.hlavacek.win/user/oauth2/localhost/callback'],
-    }
-  ],
+  clients: CLIENTS,
   interactions: {
     url(ctx, interaction) { // eslint-disable-line no-unused-vars
       return `/interaction/${interaction.uid}`;
