@@ -11,17 +11,17 @@ import helmet from 'helmet';
 
 import Provider from 'oidc-provider';
 
-import Account from './account.js';
+import AccountService from './accountService.js';
 import configuration from './configuration.js';
 import routes from './routes.js';
-import { addToken } from "./verify-jwt.js";
+import { addUserInfo } from "./verify-jwt.js";
 
 const __dirname = dirname(import.meta.url);
 
 const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
 const ENV_PROD = process.env.NODE_ENV === 'production';
 const ENV_SSL = !!process.env.SSL;
-configuration.findAccount = Account.findAccount;
+configuration.findAccount = AccountService.findAccount;
 
 const app = express();
 
@@ -71,7 +71,7 @@ try {
         });
     }
 
-    app.use(addToken)
+    app.use(addUserInfo)
     routes(app, provider);
     app.use(provider.callback());
 

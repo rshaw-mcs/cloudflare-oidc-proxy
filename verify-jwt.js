@@ -3,6 +3,14 @@
 import jwksClient from 'jwks-rsa';
 import jwt from 'jsonwebtoken';
 import cookie from "cookie";
+import express from "express";
+import { strict as assert } from 'assert';
+
+const {Request, Response} = express;
+
+/**
+ * @typedef {Request & {user: {email: string} | undefined | null}} AuthorizedRequest
+ */
 
 // The Application Audience (AUD) tag for your application
 const AUD = process.env.POLICY_AUD;
@@ -21,9 +29,14 @@ const getKey = (header, callback) => {
     });
 }
 
-// verifyToken is a middleware to verify a CF authorization token
-export const addToken = (req, res, next) => {
-    console.log('ACC', req.path)
+/**
+ * addUserInfo is a middleware to verify a CF authorization token
+ * @param req {AuthorizedRequest}
+ * @param res {Response}
+ * @param next {() => void}
+ */
+export const addUserInfo = (req, res, next) => {
+    console.debug('ACC', req.path);
 
     let token = req.header('Cf-Access-Jwt-Assertion');
 
@@ -38,13 +51,29 @@ export const addToken = (req, res, next) => {
         next();
         return;
     }
-
     jwt.verify(token, getKey, { audience: AUD }, (err, decoded) => {
         if (err) {
+            assert(res);
             return res.status(403).send({ status: false, message: 'invalid token' });
         }
 
-        req.user = decoded;
+        // noinspection JSUnresolvedReference
+        /** @type {string} */
+        const email = decoded.email;
+        assert(typeof email === "string");
+        req.user = {email};
         next();
     });
+}
+
+/**
+ * @type {AuthorizedRequest}
+ * @return Promise<void>
+ */
+export async function addUserInfoPromise(req) {
+    let promiseResolve;
+    const promise = new Promise((resolve) => promiseResolve = resolve);
+
+    addUserInfo(req, undefined, () => promiseResolve());
+    await promiseResolve;
 }

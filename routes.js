@@ -6,7 +6,7 @@ import { inspect } from 'node:util';
 import isEmpty from 'lodash/isEmpty.js';
 import { urlencoded } from 'express'; // eslint-disable-line import/no-unresolved
 
-import Account from './account.js';
+import AccountService from './accountService.js';
 import { errors } from 'oidc-provider';
 
 const body = urlencoded({ extended: false });
@@ -105,7 +105,7 @@ export default (app, provider) => {
     try {
       const { prompt: { name } } = await provider.interactionDetails(req, res);
       assert.equal(name, 'login');
-      const account = await Account.findByLogin(req, req.body.login);
+      const account = await AccountService.findByLogin(req, req.body.login);
 
       const result = {
         login: {
