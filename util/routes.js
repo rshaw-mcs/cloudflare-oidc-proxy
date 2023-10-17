@@ -56,7 +56,7 @@ export default (app, provider) => {
     });
   });
 
-  app.get('/interaction/:uid', setNoCache, async (req, res, next) => {
+  app.get('/protected/interaction/:uid', setNoCache, async (req, res, next) => {
     try {
       const {
         uid, prompt, params, session,
@@ -103,7 +103,7 @@ export default (app, provider) => {
     }
   });
 
-  app.post('/interaction/:uid/login', setNoCache, body, async (req, res, next) => {
+  app.post('/protected/interaction/:uid/login', setNoCache, body, async (req, res, next) => {
     try {
       const { prompt: { name } } = await provider.interactionDetails(req, res);
       assert.equal(name, 'login');
@@ -121,7 +121,7 @@ export default (app, provider) => {
     }
   });
 
-  app.post('/interaction/:uid/confirm', setNoCache, body, async (req, res, next) => {
+  app.post('/protected/interaction/:uid/confirm', setNoCache, body, async (req, res, next) => {
     try {
       const interactionDetails = await provider.interactionDetails(req, res);
       const { prompt: { name, details }, params, session: { accountId } } = interactionDetails;
@@ -168,7 +168,7 @@ export default (app, provider) => {
     }
   });
 
-  app.get('/interaction/:uid/abort', setNoCache, async (req, res, next) => {
+  app.get('/protected/interaction/:uid/abort', setNoCache, async (req, res, next) => {
     try {
       const result = {
         error: 'access_denied',

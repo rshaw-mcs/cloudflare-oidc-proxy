@@ -20,7 +20,7 @@
 
     var form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/interaction/' + uid + '/federated';
+    form.action = '/protected/interaction/' + uid + '/federated';
     Object.keys(fields).forEach((key) => {
       if (key) { // empty fragment will yield {"":""};
         var input = document.createElement('input');

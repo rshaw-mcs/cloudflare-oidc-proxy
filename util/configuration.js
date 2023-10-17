@@ -10,7 +10,7 @@ export default {
   clients: CLIENTS,
   interactions: {
     url(ctx, interaction) { // eslint-disable-line no-unused-vars
-      return `/interaction/${interaction.uid}`;
+      return `/protected/interaction/${interaction.uid}`;
     },
   },
   cookies: {
@@ -40,6 +40,20 @@ export default {
     Interaction: 3600 /* 1 hour in seconds */,
     Session: 1209600 /* 14 days in seconds */,
     RefreshToken: 1209600 /* 14 days in seconds */
+  },
+  routes: {
+    authorization: '/protected/auth',
+    backchannel_authentication: '/protected/backchannel',
+    code_verification: '/protected/device',
+    device_authorization: '/protected/device/auth',
+    end_session: '/protected/session/end',
+    introspection: '/token/introspection',
+    jwks: '/jwks',
+    pushed_authorization_request: '/protected/request',
+    registration: '/protected/reg',
+    revocation: '/token/revocation',
+    token: '/token',
+    userinfo: '/me'
   },
   jwks: {
     keys: [
