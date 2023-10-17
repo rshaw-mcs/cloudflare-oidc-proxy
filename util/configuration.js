@@ -1,6 +1,6 @@
 // Adapted from https://github.com/panva/node-oidc-provider/blob/main/example/support/configuration.js
 
-import { CLIENTS } from "./config/clients.js";
+import { CLIENTS } from "../config/clients.js";
 
 // noinspection JSUnusedGlobalSymbols, JSUnusedLocalSymbols
 export default {

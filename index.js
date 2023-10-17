@@ -13,10 +13,10 @@ import helmet from 'helmet';
 
 import Provider from 'oidc-provider';
 
-import AccountService from './accountService.js';
-import configuration from './configuration.js';
-import routes from './routes.js';
-import { addUserInfo } from "./verify-jwt.js";
+import AccountService from './util/accountService.js';
+import configuration from './util/configuration.js';
+import routes from './util/routes.js';
+import { addUserInfo } from "./util/verify-jwt.js";
 
 const __dirname = dirname(import.meta.url);
 
