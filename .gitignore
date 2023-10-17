@@ -5,3 +5,5 @@ key.pem
 .env
 config/*
 !config/*.example*
+data/*
+!data/.gitkeep

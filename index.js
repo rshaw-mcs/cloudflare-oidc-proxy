@@ -17,6 +17,7 @@ import AccountService from './util/accountService.js';
 import configuration from './util/configuration.js';
 import routes from './util/routes.js';
 import { addUserInfo } from "./util/verify-jwt.js";
+import PersistentAdapter from "./util/persistentAdapter.js";
 
 const __dirname = dirname(import.meta.url);
 
@@ -43,13 +44,7 @@ app.set('view engine', 'ejs');
 
 let server;
 try {
-    let adapter;
-    if (process.env.MONGODB_URI) {
-        ({ default: adapter } = await import('./adapters/mongodb.js'));
-        await adapter.connect();
-    }
-
-    const provider = new Provider(ISSUER, { adapter, ...configuration });
+    const provider = new Provider(ISSUER, {adapter: PersistentAdapter, ...configuration });
 
     if (ENV_PROD) {
         app.enable('trust proxy');
