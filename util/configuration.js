@@ -13,9 +13,7 @@ export default {
       return `/protected/interaction/${interaction.uid}`;
     },
   },
-  cookies: {
-    keys: ['some secret key', 'and also the old rotated away some time ago', 'and one more'],
-  },
+  cookies: { /* loaded from file  */ },
   claims: {
     address: ['address'],
     email: ['email', 'email_verified'],

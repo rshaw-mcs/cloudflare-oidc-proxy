@@ -19,6 +19,7 @@ import routes from './util/routes.js';
 import { addUserInfo } from "./util/verifyJWT.js";
 import PersistentAdapter from "./util/persistentAdapter.js";
 import { KeyManager } from "./util/generateKeys.js";
+import { CookieSecretManager } from "./util/generateCookieKeys.js";
 
 const __dirname = dirname(import.meta.url);
 
@@ -47,6 +48,7 @@ async function main() {
     let server;
     try {
         configuration.jwks = await (new KeyManager()).loadKeysOrGenerateAndSave(path.join('data', 'keys.json'));
+        configuration.cookies = new CookieSecretManager(path.join('data', 'cookie_secrets.json')).getCookies();
         const provider = new Provider(ISSUER, {adapter: PersistentAdapter, ...configuration });
 
         if (ENV_PROD) {
