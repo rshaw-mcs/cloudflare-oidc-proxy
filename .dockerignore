@@ -1,0 +1,11 @@
+node_modules
+.idea
+cert.pem
+key.pem
+.env
+config/*
+data/*
+!data/.gitkeep
+Dockerfile
+.dockerignore
+docker-compose.yml

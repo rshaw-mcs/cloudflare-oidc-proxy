@@ -1,0 +1,14 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./config:/opt/app/config
+      - ./data:/opt/app/data
+    image: esoadamo/cloudflare-oicd-proxy
+    container_name: cf-oicd-proxy
+    restart: always
+    ports:
+      - "3000:3000"

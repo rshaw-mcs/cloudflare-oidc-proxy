@@ -81,11 +81,11 @@ async function main() {
                 key: fs.readFileSync('key.pem'),
                 cert: fs.readFileSync('cert.pem')
             }, app).listen(port,  '',() => {
-                console.log(`application is listening on port https://localhost:${port}, check its https://localhost:${port}/.well-known/openid-configuration`);
+                console.log(`application is listening on port https://localhost:${port}, check its ${MAIN_CONFIG.issuer}/.well-known/openid-configuration`);
             });
         } else {
             server = app.listen(port, () => {
-                console.log(`Application is listening on port http://localhost:${port}, check its http://localhost:${port}/.well-known/openid-configuration`);
+                console.log(`Application is listening on port http://localhost:${port}, check its ${MAIN_CONFIG.issuer}/.well-known/openid-configuration`);
             });
         }
     } catch (err) {
