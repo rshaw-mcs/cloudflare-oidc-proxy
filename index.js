@@ -20,17 +20,13 @@ import { addUserInfo } from "./util/verifyJWT.js";
 import PersistentAdapter from "./util/persistentAdapter.js";
 import { KeyManager } from "./util/generateKeys.js";
 import { CookieSecretManager } from "./util/generateCookieKeys.js";
+import { MAIN_CONFIG } from "./config/main.js";
 
 const __dirname = dirname(import.meta.url);
 
-const { PORT = 3000, ISSUER = `http://localhost:${PORT}` } = process.env;
-const ENV_PROD = process.env.NODE_ENV === 'production';
-const ENV_SSL = !!process.env.SSL;
-configuration.findAccount = AccountService.findAccount;
-
 const app = express();
 
-if (ENV_PROD) {
+if (MAIN_CONFIG.env_production) {
     const directives = helmet.contentSecurityPolicy.getDefaultDirectives();
     delete directives['form-action'];
     app.use(helmet({
@@ -47,11 +43,13 @@ app.set('view engine', 'ejs');
 async function main() {
     let server;
     try {
+        configuration.findAccount = AccountService.findAccount;
         configuration.jwks = await (new KeyManager()).loadKeysOrGenerateAndSave(path.join('data', 'keys.json'));
         configuration.cookies = new CookieSecretManager(path.join('data', 'cookie_secrets.json')).getCookies();
-        const provider = new Provider(ISSUER, {adapter: PersistentAdapter, ...configuration });
+        const provider = new Provider(MAIN_CONFIG.issuer, {adapter: PersistentAdapter, ...configuration });
+        const port = MAIN_CONFIG.port;
 
-        if (ENV_PROD) {
+        if (MAIN_CONFIG.env_production) {
             app.enable('trust proxy');
             provider.proxy = true;
 
@@ -78,16 +76,16 @@ async function main() {
         routes(app, provider);
         app.use(provider.callback());
 
-        if (ENV_SSL) {
+        if (MAIN_CONFIG.use_ssl) {
             server = https.createServer({
                 key: fs.readFileSync('key.pem'),
                 cert: fs.readFileSync('cert.pem')
-            }, app).listen(PORT,  '',() => {
-                console.log(`application is listening on port https://localhost:${PORT}, check its /.well-known/openid-configuration`);
+            }, app).listen(port,  '',() => {
+                console.log(`application is listening on port https://localhost:${port}, check its https://localhost:${port}/.well-known/openid-configuration`);
             });
         } else {
-            server = app.listen(PORT, () => {
-                console.log(`Application is listening on port http://localhost:${PORT}, check its http://localhost:${PORT}/.well-known/openid-configuration`);
+            server = app.listen(port, () => {
+                console.log(`Application is listening on port http://localhost:${port}, check its http://localhost:${port}/.well-known/openid-configuration`);
             });
         }
     } catch (err) {

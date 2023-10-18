@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import cookie from "cookie";
 import express from "express";
 import { strict as assert } from 'assert';
+import { MAIN_CONFIG } from "../config/main.js";
 
 const {Request, Response} = express;
 
@@ -12,12 +13,7 @@ const {Request, Response} = express;
  * @typedef {Request & {user: {email: string} | undefined | null}} AuthorizedRequest
  */
 
-// The Application Audience (AUD) tag for your application
-const AUD = process.env.POLICY_AUD;
-
-// Your CF Access team domain
-const TEAM_DOMAIN = process.env.TEAM_DOMAIN;
-const CERTS_URL = `https://${TEAM_DOMAIN}.cloudflareaccess.com/cdn-cgi/access/certs`;
+const CERTS_URL = `https://${MAIN_CONFIG.cf_team_domain}.cloudflareaccess.com/cdn-cgi/access/certs`;
 
 const client = jwksClient({
     jwksUri: CERTS_URL
@@ -51,7 +47,7 @@ export const addUserInfo = (req, res, next) => {
         next();
         return;
     }
-    jwt.verify(token, getKey, { audience: AUD }, (err, decoded) => {
+    jwt.verify(token, getKey, { audience: MAIN_CONFIG.cf_audience }, (err, decoded) => {
         if (err) {
             assert(res);
             return res.status(403).send({ status: false, message: 'invalid token' });
@@ -75,5 +71,5 @@ export async function addUserInfoPromise(req) {
     const promise = new Promise((resolve) => promiseResolve = resolve);
 
     addUserInfo(req, undefined, () => promiseResolve());
-    await promiseResolve;
+    await promise;
 }
