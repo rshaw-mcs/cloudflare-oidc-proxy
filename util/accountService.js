@@ -1,6 +1,6 @@
 // Adapted from https://github.com/panva/node-oidc-provider/blob/main/example/support/account.js
 
-import { addUserInfoPromise } from "./verify-jwt.js";
+import { addUserInfoPromise } from "./verifyJWT.js";
 import { ACCOUNT_MAP, ACCOUNTS } from "../config/accounts.js";
 import { strict as assert } from 'assert';
 

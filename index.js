@@ -16,8 +16,9 @@ import Provider from 'oidc-provider';
 import AccountService from './util/accountService.js';
 import configuration from './util/configuration.js';
 import routes from './util/routes.js';
-import { addUserInfo } from "./util/verify-jwt.js";
+import { addUserInfo } from "./util/verifyJWT.js";
 import PersistentAdapter from "./util/persistentAdapter.js";
+import { KeyManager } from "./util/generateKeys.js";
 
 const __dirname = dirname(import.meta.url);
 
@@ -42,51 +43,56 @@ if (ENV_PROD) {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-let server;
-try {
-    const provider = new Provider(ISSUER, {adapter: PersistentAdapter, ...configuration });
+async function main() {
+    let server;
+    try {
+        configuration.jwks = await (new KeyManager()).loadKeysOrGenerateAndSave(path.join('data', 'keys.json'));
+        const provider = new Provider(ISSUER, {adapter: PersistentAdapter, ...configuration });
 
-    if (ENV_PROD) {
-        app.enable('trust proxy');
-        provider.proxy = true;
+        if (ENV_PROD) {
+            app.enable('trust proxy');
+            provider.proxy = true;
 
-        app.use((req, res, next) => {
-            if (req.secure) {
-                next();
-            } else if (req.method === 'GET' || req.method === 'HEAD') {
-                res.redirect(url.format({
-                    protocol: 'https',
-                    host: req.get('host'),
-                    pathname: req.originalUrl,
-                }));
-            } else {
-                res.status(400).json({
-                    error: 'invalid_request',
-                    error_description: 'do yourself a favor and only use https',
-                });
-            }
-        });
+            app.use((req, res, next) => {
+                if (req.secure) {
+                    next();
+                } else if (req.method === 'GET' || req.method === 'HEAD') {
+                    res.redirect(url.format({
+                        protocol: 'https',
+                        host: req.get('host'),
+                        pathname: req.originalUrl,
+                    }));
+                } else {
+                    res.status(400).json({
+                        error: 'invalid_request',
+                        error_description: 'do yourself a favor and only use https',
+                    });
+                }
+            });
+        }
+
+        // noinspection JSCheckFunctionSignatures
+        app.use(addUserInfo)
+        routes(app, provider);
+        app.use(provider.callback());
+
+        if (ENV_SSL) {
+            server = https.createServer({
+                key: fs.readFileSync('key.pem'),
+                cert: fs.readFileSync('cert.pem')
+            }, app).listen(PORT,  '',() => {
+                console.log(`application is listening on port https://localhost:${PORT}, check its /.well-known/openid-configuration`);
+            });
+        } else {
+            server = app.listen(PORT, () => {
+                console.log(`Application is listening on port http://localhost:${PORT}, check its http://localhost:${PORT}/.well-known/openid-configuration`);
+            });
+        }
+    } catch (err) {
+        if (server?.listening) server.close();
+        console.error(err);
+        process.exitCode = 1;
     }
-
-    // noinspection JSCheckFunctionSignatures
-    app.use(addUserInfo)
-    routes(app, provider);
-    app.use(provider.callback());
-
-    if (ENV_SSL) {
-        server = https.createServer({
-            key: fs.readFileSync('key.pem'),
-            cert: fs.readFileSync('cert.pem')
-        }, app).listen(PORT,  '',() => {
-            console.log(`application is listening on port https://localhost:${PORT}, check its /.well-known/openid-configuration`);
-        });
-    } else {
-        server = app.listen(PORT, () => {
-            console.log(`application is listening on port http://localhost:${PORT}, check its /.well-known/openid-configuration`);
-        });
-    }
-} catch (err) {
-    if (server?.listening) server.close();
-    console.error(err);
-    process.exitCode = 1;
 }
+
+main().then(() => console.log("Application start initialized"));
