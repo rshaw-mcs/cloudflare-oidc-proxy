@@ -68,7 +68,7 @@ class PersistentAdapter {
         const key = this.key(id);
 
         if (this.model === 'Session') {
-            storage.set(sessionUidKeyFor(payload.uid), id, expiresIn * 1000);
+            storage.set(sessionUidKeyFor(payload.uid), id, expiresIn);
         }
 
         const { grantId, userCode } = payload;
@@ -83,10 +83,10 @@ class PersistentAdapter {
         }
 
         if (userCode) {
-            storage.set(userCodeKeyFor(userCode), id, expiresIn * 1000);
+            storage.set(userCodeKeyFor(userCode), id, expiresIn);
         }
 
-        storage.set(key, payload, expiresIn * 1000);
+        storage.set(key, payload, expiresIn);
     }
 
     async revokeByGrantId(grantId) { // eslint-disable-line class-methods-use-this
