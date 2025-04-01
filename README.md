@@ -10,7 +10,7 @@ To get started with this OIDC provider, follow the steps below.
 
 Before you begin, make sure you have the following prerequisites installed:
 
-- Node.js (version 14 or higher)
+- Node.js (version 22 or higher)
 - npm (Node Package Manager)
 - A Cloudflare Access account and a valid Cloudflare Access configuration.
 
