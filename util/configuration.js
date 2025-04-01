@@ -33,11 +33,11 @@ export default {
     BackchannelAuthenticationRequest: 600 /* 10 minutes in seconds */,
     ClientCredentials: 600 /* 10 minutes in seconds */,
     DeviceCode: 600 /* 10 minutes in seconds */,
-    Grant: 1209600 /* 14 days in seconds */,
+    Grant: 3600 /* 1 hour in seconds */,
     IdToken: 3600 /* 1 hour in seconds */,
     Interaction: 3600 /* 1 hour in seconds */,
-    Session: 1209600 /* 14 days in seconds */,
-    RefreshToken: 1209600 /* 14 days in seconds */
+    Session: 3600 /* 1 hour in seconds */,
+    RefreshToken: 3600 /* 1 hour in seconds */,
   },
   routes: {
     authorization: '/protected/auth',
