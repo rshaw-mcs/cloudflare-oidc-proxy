@@ -47,6 +47,13 @@ export class Cache {
      * Save the current cache map to the JSON file.
      */
     saveCache() {
+        // Delete all expired entries from the cache
+        for (const key in this.cacheMap) {
+            if (this.cacheMap[key].expiration !== undefined && this.cacheMap[key].expiration < Date.now()) {
+                delete this.cacheMap[key];
+            }
+        }
+
         try {
             // Write the entire cache map to the JSON file
             fs.writeFileSync(this.cacheFilePath, JSON.stringify(this.cacheMap, null, 2));
