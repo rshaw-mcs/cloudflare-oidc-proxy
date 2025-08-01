@@ -1,7 +1,7 @@
 // Adapted from https://github.com/panva/node-oidc-provider/blob/main/example/support/account.js
 
 import { addUserInfoPromise } from "./verifyJWT.js";
-import { ACCOUNT_MAP, ACCOUNTS } from "../config/accounts.js";
+import { ACCOUNT_MAP, ACCOUNTS, ACCOUNT_AUTO_ADD } from "../config/accounts.js";
 import { strict as assert } from 'assert';
 
 
@@ -49,6 +49,10 @@ class AccountService {
 
         resolve(AccountService.getAccountById(accountId));
       }
+      if(ACCOUNT_AUTO_ADD) {
+        console.warn(`Account with email ${expectedMail} not found, but auto-adding...`);
+        return resolve(AccountService.addNewAccount(expectedMail));
+      }
 
       throw new Error(`Local account ${expectedMail} not found`);
     });
@@ -76,6 +80,10 @@ class AccountService {
    */
   static getAccountById(accountId) {
     const accountData = ACCOUNTS.find(account => account.sub === accountId);
+    if(!accountData && ACCOUNT_AUTO_ADD) {
+      console.warn(`Account with ID ${accountId} not found, but auto-adding...`);
+      return AccountService.addNewAccount(accountId);
+    }
     console.debug(`looking for ${accountId} (found: ${!!accountData})`);
     assert(accountData);
     return new Account(accountData);
@@ -96,6 +104,24 @@ class AccountService {
     if (!req?.user?.email || !expected || expected !== req.user.email) {
       throw new Error(`Username "${expected}" does not match expected email ${req.user.email}`);
     }
+  }
+
+  /**
+   * Adds a new account to ACCOUNTS and ACCOUNT_MAP
+   * @param accountId {string}
+   * @return {Account}
+   */
+  static addNewAccount(accountId) {
+    const newAccount = {
+      sub: accountId,
+      email: accountId,
+      email_verified: true,
+      name: accountId.split('@')[0],
+      locale: 'en-US',
+    };
+    ACCOUNTS.push(newAccount);
+    ACCOUNT_MAP[accountId] = [newAccount.email];
+    return new Account(newAccount);
   }
 }
 
