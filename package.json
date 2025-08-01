@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "dev": "nodemon --watch ./util --ignore '*.json' --verbose --exec node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "ignore": ["data/*.json"]
   },
   "author": "",
   "type": "module",
@@ -26,5 +30,8 @@
   },
   "volta": {
     "node": "22.14.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
