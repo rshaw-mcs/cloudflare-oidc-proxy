@@ -5,13 +5,16 @@ import jwt from 'jsonwebtoken';
 import cookie from "cookie";
 import express from "express";
 import { strict as assert } from 'assert';
-import { MAIN_CONFIG } from "../config/main.js";
+import { dynamicImport } from './dynamicImport.js';
+let MAIN_CONFIG;
+({ MAIN_CONFIG } = await dynamicImport('../config/main.js'));
 
 const {Request, Response} = express;
 
 /**
  * @typedef {Request & {user: {email: string} | undefined | null}} AuthorizedRequest
  */
+
 
 const CERTS_URL = `https://${MAIN_CONFIG.cf_team_domain}.cloudflareaccess.com/cdn-cgi/access/certs`;
 
