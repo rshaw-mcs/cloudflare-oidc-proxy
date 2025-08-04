@@ -107,7 +107,7 @@ class AccountService {
   }
 
   /**
-   * Adds a new account to ACCOUNTS and ACCOUNT_MAP
+   * Adds a new account to ACCOUNTS and ACCOUNT_MAP, used when ACCOUNT_AUTO_ADD is set to true
    * @param accountId {string}
    * @return {Account}
    */
