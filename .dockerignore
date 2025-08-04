@@ -3,7 +3,9 @@ node_modules
 cert.pem
 key.pem
 .env
-config/*
+config/accounts.js
+config/main.js
+config/clients.js
 data/*
 !data/.gitkeep
 Dockerfile
