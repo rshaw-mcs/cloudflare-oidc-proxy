@@ -1,8 +1,10 @@
 // Adapted from https://github.com/panva/node-oidc-provider/blob/main/example/support/account.js
 
 import { addUserInfoPromise } from "./verifyJWT.js";
-import { ACCOUNT_MAP, ACCOUNTS, ACCOUNT_AUTO_ADD } from "../config/accounts.js";
 import { strict as assert } from 'assert';
+import { dynamicImport } from './dynamicImport.js';
+let ACCOUNTS, ACCOUNT_MAP, ACCOUNT_AUTO_ADD;
+({ ACCOUNTS, ACCOUNT_MAP, ACCOUNT_AUTO_ADD } = await dynamicImport('../config/accounts.js'));
 
 
 class Account {

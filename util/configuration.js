@@ -1,6 +1,8 @@
 // Adapted from https://github.com/panva/node-oidc-provider/blob/main/example/support/configuration.js
 
-import { CLIENTS } from "../config/clients.js";
+import { dynamicImport } from './dynamicImport.js';
+let CLIENTS;
+({ CLIENTS } = await dynamicImport('../config/clients.js'));
 
 // noinspection JSUnusedGlobalSymbols, JSUnusedLocalSymbols
 export default {

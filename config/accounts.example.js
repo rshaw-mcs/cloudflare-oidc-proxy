@@ -64,6 +64,6 @@ export const ACCOUNT_MAP = {
  * Skip account verification and just add them...
  * @type {boolean}
  */
-export const ACCOUNT_AUTO_ADD = false;
+export const ACCOUNT_AUTO_ADD = process.env.ACCOUNT_AUTO_ADD ? process.env.ACCOUNT_AUTO_ADD : false;
 
 Object.keys(ACCOUNT_MAP).forEach((localId) => assert(ACCOUNTS.find(account => account.sub === localId), `${localId} is specified in map but not in accounts`));

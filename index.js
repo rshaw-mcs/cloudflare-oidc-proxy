@@ -20,8 +20,9 @@ import { addUserInfo } from "./util/verifyJWT.js";
 import PersistentAdapter from "./util/persistentAdapter.js";
 import { KeyManager } from "./util/generateKeys.js";
 import { CookieSecretManager } from "./util/generateCookieKeys.js";
-import { MAIN_CONFIG } from "./config/main.js";
-
+import { dynamicImport } from './util/dynamicImport.js';
+let MAIN_CONFIG;
+({ MAIN_CONFIG } = await dynamicImport('../config/main.js'));
 const __dirname = dirname(import.meta.url);
 
 const app = express();
