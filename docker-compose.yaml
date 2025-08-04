@@ -5,11 +5,11 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./config:/opt/app/config
       - ./data:/opt/app/data
     # image: esoadamo/cloudflare-oicd-proxy
     restart: always
-    # env_file:
-    #   - .env
+    env_file:
+      - path: .env
+        required: false #allow clie passthrough of env vars
     ports:
       - ${PORT}:${PORT}
