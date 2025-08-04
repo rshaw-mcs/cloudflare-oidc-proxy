@@ -61,7 +61,8 @@ export const ACCOUNT_MAP = {
 } ;
 
 /**
- * Skip account verification and just add them...
+ * If set to true, then an account is automatically enabled upon first successful login
+ * You need to properly filter users inside Cloudflare portal so that only authorized users are able to log in to this application
  * @type {boolean}
  */
 export const ACCOUNT_AUTO_ADD = false;
