@@ -5,7 +5,6 @@
  * @returns {Promise<any>} The imported module
  */
 export async function dynamicImport(modulePath) {
-  console.log(import.meta.resolve(modulePath))
   try {
     return await import(modulePath);
   } catch (e) {
