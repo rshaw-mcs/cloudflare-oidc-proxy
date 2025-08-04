@@ -9,7 +9,7 @@ services:
       - ./data:/opt/app/data
     # image: esoadamo/cloudflare-oicd-proxy
     restart: always
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
     ports:
       - ${PORT}:${PORT}
