@@ -7,8 +7,9 @@ services:
     volumes:
       - ./config:/opt/app/config
       - ./data:/opt/app/data
-    image: esoadamo/cloudflare-oicd-proxy
-    container_name: cf-oicd-proxy
+    # image: esoadamo/cloudflare-oicd-proxy
     restart: always
+    env_file:
+      - .env
     ports:
-      - "3000:3000"
+      - ${PORT}:${PORT}
